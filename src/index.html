@@ -1,22 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="styles.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus App</title>
-        <script type="module" src="/main.js" defer></script>
-    </head>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击计数器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #top-section {
+            flex: 1;
+            background-color: lightcoral;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #bottom-section {
+            flex: 2;
+            background-color: lightgreen;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        select {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #normal-controls, #custom-controls {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="top-section" onclick="handleTopClick()">减少计数</div>
+    <div id="bottom-section" onclick="increment()">增加计数</div>
+    <select id="countMode" onchange="setCountMode()">
+        <option value="normal">正常计数</option>
+        <option value="custom">设置数字减少</option>
+    </select>
+    <div id="normal-controls">
+        <button onclick="resetCounter()">清零</button>
+    </div>
+    <div id="custom-controls">
+        <input type="number" id="decrementValue" placeholder="输入减少的数值">
+        <button onclick="decrementByValue()">按输入值减少</button>
+        <button onclick="resetCounter()">清零</button>
+    </div>
+    <p id="counter" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); font-size: 24px;"></p>
+    <script>
+        // 初始化计数器
+        let counter = 0;
+        let countMode = 'normal';
 
-    <body>
-        <main class="container">
-            <h1>Welcome to PakePlus</h1>
+        window.onload = function() {
+            setCountMode();
+        };
 
-            <form class="row" id="greet-form">
-                <input id="greet-input" placeholder="Enter a name..." />
-                <button type="submit">Greet</button>
-            </form>
-            <p id="greet-msg"></p>
-        </main>
-    </body>
+        function handleTopClick() {
+            if (countMode === 'normal') {
+                decrement();
+            } else {
+                decrementByValue();
+            }
+        }
+
+        function increment() {
+            counter++;
+            updateCounter();
+        }
+
+        function decrement() {
+            counter--;
+            updateCounter();
+        }
+
+        function decrementByValue() {
+            const value = parseInt(document.getElementById('decrementValue').value);
+            if (!isNaN(value)) {
+                counter -= value;
+                updateCounter();
+            }
+        }
+
+        function resetCounter() {
+            counter = 0;
+            updateCounter();
+        }
+
+        function setCountMode() {
+            countMode = document.getElementById('countMode').value;
+            document.getElementById('normal-controls').style.display = countMode === 'normal' ? 'block' : 'none';
+            document.getElementById('custom-controls').style.display = countMode === 'custom' ? 'block' : 'none';
+        }
+
+        function updateCounter() {
+            document.getElementById('counter').textContent = counter;
+        }
+    </script>
+</body>
 </html>
